@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Private Search</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(145deg, #0d1117, #161b22);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .search-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      padding: 2rem;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      font-weight: normal;
+      color: #c9d1d9;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 0.75rem;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #888;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      background: #238636;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #2ea043;
+    }
+
+    .hint {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="search-box">
+    <h1>Private Search</h1>
+    <form id="searchForm" action="https://duckduckgo.com/" method="GET" target="_blank">
+      <input type="text" id="searchInput" name="q" placeholder="Search privately..." autocomplete="off" />
+      <br />
+      <button type="submit">Search</button>
+    </form>
+    <div class="hint">Press <kbd>Enter</kbd> to search, <kbd>Ctrl+Z</kbd> to clear, <kbd>Ctrl+K</kbd> to focus</div>
+  </div>
+
+  <script>
+    const input = document.getElementById('searchInput');
+    const form = document.getElementById('searchForm');
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.activeElement === input) {
+        form.submit();
+      }
+
+      // Ctrl+Z to clear
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+        e.preventDefault();
+        input.value = '';
+      }
+
+      // Ctrl+K to focus
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        input.focus();
+      }
+    });
+  </script>
+</body>
+</html>
