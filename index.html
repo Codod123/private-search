@@ -83,29 +83,40 @@
     </form>
     <div class="hint">Press <kbd>Enter</kbd> to search, <kbd>Ctrl+Z</kbd> to clear, <kbd>Ctrl+K</kbd> to focus</div>
   </div>
+<script>
+  const form = document.getElementById('searchForm');
+  const input = document.getElementById('searchInput');
+  const resultsDiv = document.createElement('div');
+  form.appendChild(resultsDiv);
 
-  <script>
-    const input = document.getElementById('searchInput');
-    const form = document.getElementById('searchForm');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const query = input.value.trim();
+    if (!query) return;
 
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && document.activeElement === input) {
-        form.submit();
+    const url = `https://codo92773.pythonanywhere.com/search?q=${encodeURIComponent(query)}`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+        resultsDiv.innerHTML = '<h3>Results:</h3><ul>' +
+          data.RelatedTopics.map(item => {
+            const text = item.Text || "No description";
+            const href = item.FirstURL || "#";
+            return `<li><a href="${href}" target="_blank">${text}</a></li>`;
+          }).join('') +
+          '</ul>';
+      } else {
+        resultsDiv.innerHTML = '<p>No results found.</p>';
       }
+    } catch (err) {
+      resultsDiv.innerHTML = '<p>Error fetching results.</p>';
+      console.error(err);
+    }
+  });
+</script>
 
-      // Ctrl+Z to clear
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-        e.preventDefault();
-        input.value = '';
-      }
-
-      // Ctrl+K to focus
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        input.focus();
-      }
-    });
-  </script>
 </body>
 </html>
